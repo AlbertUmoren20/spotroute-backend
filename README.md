@@ -1,6 +1,6 @@
 # SpotRoute Backend — Spring Boot
 
-Express.js → Spring Boot migration of the SpotRoute pooled ride-sharing backend.
+Spring Boot migration of the SpotRoute pooled ride-sharing backend.
 
 ## Stack
 
