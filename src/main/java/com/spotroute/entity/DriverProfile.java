@@ -1,5 +1,7 @@
 package com.spotroute.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.spotroute.core.enums.DriverStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,7 +12,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "driver_profiles")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class DriverProfile {
 
     @Id
@@ -36,6 +42,7 @@ public class DriverProfile {
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
+    @JsonIgnore
     private DriverStatus status = DriverStatus.ACTIVE;
 
     @CreationTimestamp
@@ -44,7 +51,4 @@ public class DriverProfile {
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)
     private List<Ride> rides;
 
-    public enum DriverStatus {
-        ACTIVE, SUSPENDED
-    }
 }

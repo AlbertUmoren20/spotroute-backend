@@ -1,5 +1,8 @@
 package com.spotroute.service;
 
+import com.spotroute.core.enums.BookingStatus;
+import com.spotroute.core.enums.PaymentStatus;
+import com.spotroute.core.enums.RideStatus;
 import com.spotroute.dto.request.CreateBookingRequest;
 import com.spotroute.dto.response.BookingResponse;
 import com.spotroute.entity.Booking;
@@ -33,7 +36,7 @@ public class BookingService {
         Ride ride = rideRepository.findById(req.getRideId())
                 .orElseThrow(() -> new ResourceNotFoundException("Ride not found"));
 
-        if (ride.getStatus() != Ride.RideStatus.SCHEDULED) {
+        if (ride.getStatus() != RideStatus.SCHEDULED) {
             throw new BadRequestException("Ride is no longer available for booking");
         }
 
@@ -55,8 +58,8 @@ public class BookingService {
                 .seatCount(req.getSeatCount())
                 .pickupPoint(req.getPickupPoint())
                 .totalAmount(total)
-                .status(Booking.BookingStatus.PENDING)
-                .paymentStatus(Booking.PaymentStatus.PENDING)
+                .status(BookingStatus.PENDING)
+                .paymentStatus(PaymentStatus.PENDING)
                 .build();
 
         bookingRepository.save(booking);

@@ -1,5 +1,7 @@
 package com.spotroute.entity;
 
+import com.spotroute.core.enums.BookingStatus;
+import com.spotroute.core.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -49,11 +51,5 @@ public class Booking {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public enum BookingStatus {
-        PENDING, CONFIRMED, CANCELLED
-    }
 
-    public enum PaymentStatus {
-        PENDING, PAID, FAILED, REFUNDED
-    }
 }

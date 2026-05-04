@@ -5,6 +5,7 @@ import com.spotroute.dto.response.ApiResponse;
 import com.spotroute.dto.response.BookingResponse;
 import com.spotroute.service.BookingService;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,9 @@ import java.util.List;
 public class BookingController {
 
     private final BookingService bookingService;
+    private final String classTag = "BookingController";
 
+    @Operation(summary = "Create Booking", description = "Users are able to create booking" , tags = classTag)
     @PostMapping
     public ResponseEntity<ApiResponse<BookingResponse>> createBooking(
             @AuthenticationPrincipal UserDetails userDetails,

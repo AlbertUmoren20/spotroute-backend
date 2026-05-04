@@ -1,5 +1,6 @@
 package com.spotroute.entity;
 
+import com.spotroute.core.enums.RideStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -49,7 +50,5 @@ public class Ride {
         return totalSeats - bookedSeats;
     }
 
-    public enum RideStatus {
-        SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
-    }
+
 }

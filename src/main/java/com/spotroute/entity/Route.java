@@ -32,6 +32,11 @@ public class Route {
     @Column(name = "pickup_point")
     private List<String> pickupPoints;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "route_pickup_points", joinColumns = @JoinColumn(name = "route_id"))
+    @Column(name = "landmarks")
+    private List<String> landmarks;
+
     @OneToMany(mappedBy = "route", fetch = FetchType.LAZY)
     private List<Ride> rides;
 }

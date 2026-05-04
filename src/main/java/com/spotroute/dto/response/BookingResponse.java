@@ -1,5 +1,7 @@
 package com.spotroute.dto.response;
 
+import com.spotroute.core.enums.BookingStatus;
+import com.spotroute.core.enums.PaymentStatus;
 import com.spotroute.entity.Booking;
 import lombok.Builder;
 import lombok.Data;
@@ -16,8 +18,8 @@ public class BookingResponse {
     private int seatCount;
     private String pickupPoint;
     private BigDecimal totalAmount;
-    private Booking.BookingStatus status;
-    private Booking.PaymentStatus paymentStatus;
+    private BookingStatus status;
+    private PaymentStatus paymentStatus;
     private String paymentReference;
     private LocalDateTime createdAt;
 

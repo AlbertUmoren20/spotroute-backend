@@ -1,5 +1,6 @@
 package com.spotroute.dto.response;
 
+import com.spotroute.core.enums.RideStatus;
 import com.spotroute.entity.Ride;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class RideResponse {
     private int totalSeats;
     private int bookedSeats;
     private int availableSeats;
-    private Ride.RideStatus status;
+    private RideStatus status;
     private LocalDateTime createdAt;
 
     public static RideResponse from(Ride ride) {

@@ -28,27 +28,34 @@ public class DataSeeder implements CommandLineRunner {
                     .pricePerSeat(new BigDecimal("1000.00"))
                     .description("Gbagada → Victoria Island via 3rd Mainland Bridge")
                     .pickupPoints(List.of("Gbagada Phase 1", "Gbagada Phase 2", "Anthony", "Maryland"))
+                        .landmarks(List.of("charley boy", "Gbagada", "Iyana Ipaja", "Third mainland bridge", "Osbourne", "Falomo", "Checking point"))
                     .build(),
+
                 Route.builder()
                     .origin("Yaba")
                     .destination("Lekki")
                     .pricePerSeat(new BigDecimal("1500.00"))
                     .description("Yaba → Lekki via Eko Bridge")
                     .pickupPoints(List.of("Yaba Bus Stop", "Jibowu", "Ojuelegba"))
+                        .landmarks(List.of("Sabo Yaba"))
                     .build(),
+
                 Route.builder()
                     .origin("Surulere")
                     .destination("Ikoyi")
                     .pricePerSeat(new BigDecimal("800.00"))
                     .description("Surulere → Ikoyi via Osborne Road")
                     .pickupPoints(List.of("Surulere Stadium", "Alaka", "Lawanson"))
+                        .landmarks(List.of("Lawanson"))
                     .build(),
+
                 Route.builder()
                     .origin("Ikeja")
                     .destination("Marina")
                     .pricePerSeat(new BigDecimal("1200.00"))
                     .description("Ikeja → Marina via Lagos Island")
                     .pickupPoints(List.of("Ikeja Along", "Allen Avenue", "Ogba"))
+                        .landmarks(List.of("Ogba"))
                     .build()
             );
             routeRepository.saveAll(routes);

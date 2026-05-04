@@ -1,5 +1,7 @@
 package com.spotroute.service;
 
+import com.spotroute.core.enums.BookingStatus;
+import com.spotroute.core.enums.PaymentStatus;
 import com.spotroute.dto.response.PaymentResponse;
 import com.spotroute.entity.Booking;
 import com.spotroute.entity.DriverProfile;
@@ -42,7 +44,7 @@ public class PaymentService {
             throw new ResourceNotFoundException("Booking not found");
         }
 
-        if (booking.getPaymentStatus() == Booking.PaymentStatus.PAID) {
+        if (booking.getPaymentStatus() == PaymentStatus.PAID) {
             throw new BadRequestException("Booking is already paid");
         }
 
@@ -113,7 +115,7 @@ public class PaymentService {
         Booking booking = bookingRepository.findByPaymentReference(paymentReference)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found for reference: " + paymentReference));
 
-        if (booking.getPaymentStatus() == Booking.PaymentStatus.PAID) {
+        if (booking.getPaymentStatus() == PaymentStatus.PAID) {
             return PaymentResponse.builder()
                     .paymentReference(paymentReference)
                     .status("success")
@@ -141,8 +143,8 @@ public class PaymentService {
                 if ("successful".equals(txStatus)
                         && booking.getTotalAmount().compareTo(BigDecimal.valueOf(paidAmount)) == 0) {
 
-                    booking.setPaymentStatus(Booking.PaymentStatus.PAID);
-                    booking.setStatus(Booking.BookingStatus.CONFIRMED);
+                    booking.setPaymentStatus(PaymentStatus.PAID);
+                    booking.setStatus(BookingStatus.CONFIRMED);
                     booking.setFlutterwaveTransactionId(transactionId);
                     bookingRepository.save(booking);
 
@@ -164,8 +166,8 @@ public class PaymentService {
             }
 
             // Payment failed — release the reserved seats
-            booking.setPaymentStatus(Booking.PaymentStatus.FAILED);
-            booking.setStatus(Booking.BookingStatus.CANCELLED);
+            booking.setPaymentStatus(PaymentStatus.FAILED);
+            booking.setStatus(BookingStatus.CANCELLED);
             bookingRepository.save(booking);
 
             Booking savedBooking = booking;
