@@ -1,9 +1,11 @@
 package com.spotroute.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,8 +14,8 @@ import java.util.List;
 public class Route {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     private String origin;
@@ -32,11 +34,10 @@ public class Route {
     @Column(name = "pickup_point")
     private List<String> pickupPoints;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "route_pickup_points", joinColumns = @JoinColumn(name = "route_id"))
-    @Column(name = "landmarks")
-    private List<String> landmarks;
-
     @OneToMany(mappedBy = "route", fetch = FetchType.LAZY)
     private List<Ride> rides;
+
+    @OneToMany(mappedBy = "route", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<LandMark> landmarks = new ArrayList<>(); // Initialize to prevent NullPointerException
 }

@@ -1,5 +1,6 @@
 package com.spotroute.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,13 +18,10 @@ import java.util.List;
 public class LandMark {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(joinColumns = @JoinColumn(name = "route_id"))
-    @Column(name = "name")
-    private List<String> name;
+    private String name; //landmark names
 
     @Column(nullable = false)
     private BigDecimal lat;
@@ -33,4 +31,10 @@ public class LandMark {
 
     @Column(nullable = false)
     private int sequenceOrder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "route_id", nullable = false)
+    @JsonBackReference
+    private Route route;
+
 }

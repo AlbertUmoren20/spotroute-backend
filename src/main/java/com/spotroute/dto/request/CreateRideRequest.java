@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class CreateRideRequest {
 
     @NotBlank(message = "Route ID is required")
-    private String routeId;
+    private Long Id;
 
     @NotNull(message = "Departure time is required")
     @Future(message = "Departure time must be in the future")

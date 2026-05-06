@@ -15,13 +15,13 @@ public class LandMarkResponse {
     private BigDecimal lat;
     private BigDecimal lng;
     private int sequenceOrder;
-
-    public static LandMarkResponse from(LandMark landMaark) {
-        return LandMarkResponse.builder()
-                .name(landMaark.getName())
-                .lat(landMaark.getLat())
-                .lng(landMaark.getLng())
-                .sequenceOrder(landMaark.getSequenceOrder())
-                .build();
-    }
+//
+//    public static LandMarkResponse from(LandMark landMark) {
+//        return LandMarkResponse.builder()
+//                .name()
+//                .lat(landMark.getLat())
+//                .lng(landMark.getLng())
+//                .sequenceOrder(landMark.getSequenceOrder())
+//                .build();
+//    }
 }

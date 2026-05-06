@@ -44,8 +44,8 @@ public class RideService {
         DriverProfile driver = driverProfileRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new ForbiddenException("Driver profile not found"));
 
-        Route route = routeRepository.findById(req.getRouteId())
-                .orElseThrow(() -> new ResourceNotFoundException("Route not found: " + req.getRouteId()));
+        Route route = routeRepository.findById(req.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Route not found: " + req.getId()));
 
         Ride ride = Ride.builder()
                 .driver(driver)

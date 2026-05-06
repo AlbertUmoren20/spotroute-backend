@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Builder
 public class RouteResponse {
-    private String id;
+    private Long id;
     private String origin;
     private String destination;
     private BigDecimal pricePerSeat;
