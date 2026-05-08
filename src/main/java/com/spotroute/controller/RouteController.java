@@ -8,6 +8,7 @@ import com.spotroute.dto.response.AppResponse;
 import com.spotroute.dto.response.LandMarkResponse;
 import com.spotroute.dto.response.RouteResponse;
 import com.spotroute.repository.RouteRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,10 @@ public class RouteController {
 
     private final RouteRepository routeRepository;
     private final LandMarkService landMarkService;
+    private final String classTag = "RouteController";
 
     @GetMapping
+    @Operation(summary = "Users to get all routes", description = "" , tags = classTag)
     public ResponseEntity<ApiResponse<List<RouteResponse>>> getAllRoutes() {
         List<RouteResponse> routes = routeRepository.findAll()
                 .stream()
@@ -33,6 +36,7 @@ public class RouteController {
         return ResponseEntity.ok(ApiResponse.ok(routes));
     }
 
+    @Operation(summary = "User/Driver view landmarks connected to their route", description = "For each route, there are landmarks" , tags = classTag)
     @GetMapping("/{routeId}/landmarks")
     public ResponseEntity<AppResponse<List<LandMark>>> getLandmarks(@PathVariable Long routeId){
         AppUtil.setStartTime();

@@ -4,6 +4,7 @@ import com.spotroute.dto.request.CreateRideRequest;
 import com.spotroute.dto.response.ApiResponse;
 import com.spotroute.dto.response.RideResponse;
 import com.spotroute.service.RideService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,15 @@ import java.util.List;
 public class RideController {
 
     private final RideService rideService;
+    private final String classTag = "RideController";
 
+    @Operation(summary = "Available rides for users", description = "" , tags = classTag)
     @GetMapping("/available")
     public ResponseEntity<ApiResponse<List<RideResponse>>> getAvailableRides() {
         return ResponseEntity.ok(ApiResponse.ok(rideService.getAvailableRides()));
     }
 
+    @Operation(summary = "Drivers initiating the rides", description = "" , tags = classTag)
     @PostMapping
     @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<RideResponse>> createRide(
@@ -36,6 +40,7 @@ public class RideController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Ride created", ride));
     }
 
+    @Operation(summary = "User/Driver view their ride details", description = "" , tags = classTag)
     @GetMapping("/my")
     @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<List<RideResponse>>> getMyRides(

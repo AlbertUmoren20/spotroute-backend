@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,9 @@ public class BookingController {
     private final BookingService bookingService;
     private final String classTag = "BookingController";
 
-    @Operation(summary = "Create Booking", description = "Users are able to create booking" , tags = classTag)
+    @Operation(summary = "Create Booking", description = "Users(Drivers) are able to create booking" , tags = classTag)
     @PostMapping
+    @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<BookingResponse>> createBooking(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody CreateBookingRequest req) {
@@ -32,12 +34,14 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Booking created", booking));
     }
 
+    @Operation(summary = "Get User booking history", description = "Users are ale to send a post request to view their ride history" , tags = classTag)
     @GetMapping("/user/me")
     public ResponseEntity<ApiResponse<List<BookingResponse>>> getMyBookings(
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(ApiResponse.ok(bookingService.getUserBookings(userDetails.getUsername())));
     }
 
+    @Operation(summary = "User's booking details", description = "Users booking details" , tags = classTag)
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<BookingResponse>> getBooking(
             @PathVariable String id,

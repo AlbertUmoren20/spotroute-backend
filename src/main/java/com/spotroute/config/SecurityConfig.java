@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .requestMatchers("/payments/webhook").permitAll()
                 // Driver-only endpoints
                 .requestMatchers("/rides").hasRole("DRIVER")
+                    .requestMatchers("/bookings").hasRole("DRIVER")
                 .requestMatchers("/wallet/**").hasRole("DRIVER")
                 // Everything else requires authentication
                 .anyRequest().authenticated()
