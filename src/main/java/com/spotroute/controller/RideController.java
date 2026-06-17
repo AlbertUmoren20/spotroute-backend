@@ -7,6 +7,7 @@ import com.spotroute.service.RideService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,7 +42,7 @@ public class RideController {
     }
 
     @Operation(summary = "User/Driver view their ride details", description = "" , tags = classTag)
-    @GetMapping("/my")
+    @GetMapping("/myDetails")
     @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<List<RideResponse>>> getMyRides(
             @AuthenticationPrincipal UserDetails userDetails) {

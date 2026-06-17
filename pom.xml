@@ -33,6 +33,13 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Spring for Apache Kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+
         <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -111,9 +118,6 @@
 
     <build>
         <plugins>
-            <!-- Explicitly configure the compiler to wire Lombok as an annotation processor.
-                 This prevents the TypeTag::UNKNOWN crash that occurs when Lombok is picked
-                 up implicitly with Java 17 and certain javac versions. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

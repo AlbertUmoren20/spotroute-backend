@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @Data
 public class CreateRideRequest {
 
-    @NotBlank(message = "Route ID is required")
-    private Long Id;
+    @NotNull(message = "ID cannot be null")
+    private Long routeId;
 
     @NotNull(message = "Departure time is required")
     @Future(message = "Departure time must be in the future")

@@ -1,6 +1,7 @@
 package com.spotroute.service;
 
 import com.spotroute.dto.request.CreateRideRequest;
+import com.spotroute.Kafka.KafkaProducer;
 import com.spotroute.dto.response.RideResponse;
 import com.spotroute.entity.DriverProfile;
 import com.spotroute.entity.Ride;
@@ -28,6 +29,7 @@ public class RideService {
     private final RouteRepository routeRepository;
     private final DriverProfileRepository driverProfileRepository;
     private final UserRepository userRepository;
+    private final KafkaProducer kafkaProducer;
 
     public List<RideResponse> getAvailableRides() {
         return rideRepository.findAvailableRides(LocalDateTime.now())
@@ -44,8 +46,8 @@ public class RideService {
         DriverProfile driver = driverProfileRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new ForbiddenException("Driver profile not found"));
 
-        Route route = routeRepository.findById(req.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Route not found: " + req.getId()));
+        Route route = routeRepository.findById(req.getRouteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Route not found: " + req.getRouteId()));
 
         Ride ride = Ride.builder()
                 .driver(driver)
@@ -53,7 +55,7 @@ public class RideService {
                 .departureTime(req.getDepartureTime())
                 .totalSeats(req.getTotalSeats())
                 .build();
-
+        kafkaProducer.sendRide(req);
         return RideResponse.from(rideRepository.save(ride));
     }
 
