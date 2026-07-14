@@ -1,5 +1,6 @@
 package com.spotroute.entity;
 
+import com.spotroute.core.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,6 +30,8 @@ public class User {
 
     @Column(nullable = false)
     private String phone;
+
+    private Status status;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

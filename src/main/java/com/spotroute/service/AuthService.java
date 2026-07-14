@@ -1,5 +1,6 @@
 package com.spotroute.service;
 
+import com.spotroute.core.enums.Status;
 import com.spotroute.dto.request.LoginRequest;
 import com.spotroute.dto.request.RegisterRequest;
 import com.spotroute.dto.response.AuthResponse;
@@ -11,12 +12,16 @@ import com.spotroute.repository.DriverProfileRepository;
 import com.spotroute.repository.UserRepository;
 import com.spotroute.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -67,9 +72,15 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
         );
-
         User user = userRepository.findByEmail(req.getEmail())
-                .orElseThrow(() -> new BadRequestException("User not found"));
+                .orElseThrow(() -> new BadRequestException("User account is deactivated"));
+
+        if(user == null || !passwordEncoder.matches(req.getPassword(), user.getPassword())){
+            log.info("Failed login attempt" + req.getEmail(), user);
+            throw new BadRequestException ("Invalid credentials!");
+        }
+        if(user.getStatus() != Status.ACTIVE)
+            throw new BadRequestException("User is disabled");
 
         DriverProfile driverProfile = null;
         if (user.getRole() == User.Role.DRIVER) {

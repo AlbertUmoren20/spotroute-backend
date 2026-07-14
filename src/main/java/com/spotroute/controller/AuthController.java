@@ -3,8 +3,10 @@ package com.spotroute.controller;
 import com.spotroute.dto.request.LoginRequest;
 import com.spotroute.dto.request.RegisterRequest;
 import com.spotroute.dto.response.ApiResponse;
+import com.spotroute.dto.response.AppResponse;
 import com.spotroute.dto.response.AuthResponse;
 import com.spotroute.service.AuthService;
+import com.spotroute.util.AppUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth/v1")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -24,16 +26,32 @@ public class AuthController {
 
     @Operation(summary = "User/Driver Registration", description = "" , tags = classTag)
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest req) {
+    public ResponseEntity<AppResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest req) {
+        AppUtil.setStartTime();
         AuthResponse response = authService.register(req);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Registration successful", response));
+        String formattedExecTime = AppUtil.stopTimer();
+        AppResponse<AuthResponse> appResponse = AppResponse.<AuthResponse>builder()
+                .status("success")
+                .message("Registration successful")
+                .data(response)
+                .execTime(formattedExecTime)
+                .build();
+        return ResponseEntity.ok().body(appResponse);
     }
 
     @Operation(summary = "User/Driver Login", description = "" , tags = classTag)
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest req) {
+    public ResponseEntity<AppResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest req) {
+        AppUtil.setStartTime();
         AuthResponse response = authService.login(req);
-        return ResponseEntity.ok(ApiResponse.ok("Login successful", response));
+        String formattedExecTime = AppUtil.stopTimer();
+        AppResponse<AuthResponse> appResponse = AppResponse.<AuthResponse>builder()
+                .status("success")
+                .message("Login successful")
+                .data(response)
+                .execTime(formattedExecTime)
+                .build();
+        return ResponseEntity.ok().body(appResponse);
     }
 
     @Operation(summary = "User/Driver Details", description = "" , tags = classTag)
