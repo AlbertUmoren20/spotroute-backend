@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.management.relation.Role;
 import java.time.LocalDateTime;
 import java.util.List;
 

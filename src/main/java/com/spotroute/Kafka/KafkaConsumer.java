@@ -10,9 +10,11 @@ public class KafkaConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaConsumer.class);
 
-    @KafkaListener(topics = "ride-request" , groupId = "spotroute-consumer-group")
+    @KafkaListener(
+            topics = "${spring.kafka.topic.name}" ,
+            groupId = "${spring.kafka.consumer.group-id}")
+
     public void consumeMessage(String message) {
        log.info("Received message: " + message );
-
     }
 }
