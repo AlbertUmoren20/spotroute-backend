@@ -50,6 +50,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(req.getPassword()))
                 .phone(req.getPhone())
                 .role(req.getRole())
+                .status(Status.ACTIVE)
                 .build();
         userRepository.save(user);
 
@@ -79,6 +80,7 @@ public class AuthService {
             log.info("Failed login attempt" + req.getEmail(), user);
             throw new BadRequestException ("Invalid credentials!");
         }
+
         if(user.getStatus() != Status.ACTIVE)
             throw new BadRequestException("User is disabled");
 

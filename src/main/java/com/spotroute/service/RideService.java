@@ -1,7 +1,7 @@
 package com.spotroute.service;
 
 import com.spotroute.dto.request.CreateRideRequest;
-import com.spotroute.Kafka.KafkaProducer;
+//import com.spotroute.Kafka.KafkaProducer;
 import com.spotroute.dto.response.RideResponse;
 import com.spotroute.entity.DriverProfile;
 import com.spotroute.entity.Ride;
@@ -29,7 +29,7 @@ public class RideService {
     private final RouteRepository routeRepository;
     private final DriverProfileRepository driverProfileRepository;
     private final UserRepository userRepository;
-    private final KafkaProducer kafkaProducer;
+//    private final KafkaProducer kafkaProducer;
 
     public List<RideResponse> getAvailableRides() {
         return rideRepository.findAvailableRides(LocalDateTime.now())
@@ -55,7 +55,7 @@ public class RideService {
                 .departureTime(req.getDepartureTime())
                 .totalSeats(req.getTotalSeats())
                 .build();
-        kafkaProducer.sendRide(req);
+//        kafkaProducer.sendRide(req);
         return RideResponse.from(rideRepository.save(ride));
     }
 
