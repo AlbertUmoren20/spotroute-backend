@@ -1,6 +1,8 @@
 package com.spotroute.controller;
 
 import com.spotroute.dto.request.LoginRequest;
+import com.spotroute.dto.request.LogoutRequest;
+import com.spotroute.dto.request.RefreshRequest;
 import com.spotroute.dto.request.RegisterRequest;
 import com.spotroute.dto.response.ApiResponse;
 import com.spotroute.dto.response.AppResponse;
@@ -54,10 +56,41 @@ public class AuthController {
         return ResponseEntity.ok().body(appResponse);
     }
 
-    @Operation(summary = "User/Driver Details", description = "" , tags = classTag)
-    @GetMapping("/me")
-    public ResponseEntity<ApiResponse<AuthResponse>> me(@AuthenticationPrincipal UserDetails userDetails) {
-        AuthResponse response = authService.getMe(userDetails.getUsername());
-        return ResponseEntity.ok(ApiResponse.ok(response));
+    @Operation(summary = "Refresh Token", description="Refresh access token with refresh token.", tags= "Auth Controller")
+    @PostMapping("/refresh")
+    public ResponseEntity<AppResponse<AuthResponse>> refresh(@Valid @RequestBody RefreshRequest req){
+        AppUtil.setStartTime();
+        AuthResponse refreshResponse = authService.refreshToken(req);
+        String formattedExecTime = AppUtil.stopTimer();
+        AppResponse<AuthResponse> response = AppResponse.<AuthResponse>builder()
+                .status(HttpStatus.OK.toString())
+                .message("Token refreshed successfully")
+                .data(refreshResponse)
+                .execTime(formattedExecTime)
+                .error("").build();
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Operation(summary = "Logout", description ="Logout with refresh token.", tags= "Auth Controller")
+    @PostMapping("/logout")
+    public ResponseEntity<AppResponse<Void>> logout(@Valid @RequestBody LogoutRequest req) {
+        AppUtil.setStartTime();
+        authService.logout(req);
+        String formattedExecTime = AppUtil.stopTimer();
+        AppResponse<Void> response = AppResponse.<Void>builder()
+                .status(HttpStatus.OK.toString())
+                .message("Logged out successfully")
+                .data(null)
+                .execTime(formattedExecTime)
+                .error("").build();
+        return ResponseEntity.ok().body(response);
     }
 }
+
+//@Operation(summary = "User/Driver Details", description = "" , tags = classTag)
+//    @GetMapping("/me")
+//    public ResponseEntity<ApiResponse<AuthResponse>> me(@AuthenticationPrincipal UserDetails userDetails) {
+//        AuthResponse response = authService.getMe(userDetails.getUsername());
+//        return ResponseEntity.ok(ApiResponse.ok(response));
+//    }
+//}

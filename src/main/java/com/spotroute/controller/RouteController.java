@@ -1,11 +1,10 @@
 package com.spotroute.controller;
 
-import com.spotroute.entity.LandMark;
+import com.spotroute.persistence.entity.LandMark;
 import com.spotroute.service.LandMarkService;
 import com.spotroute.util.AppUtil;
 import com.spotroute.dto.response.ApiResponse;
 import com.spotroute.dto.response.AppResponse;
-import com.spotroute.dto.response.LandMarkResponse;
 import com.spotroute.dto.response.RouteResponse;
 import com.spotroute.repository.RouteRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/routes/v1")

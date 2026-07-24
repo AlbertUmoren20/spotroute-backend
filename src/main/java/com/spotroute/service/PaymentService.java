@@ -3,8 +3,8 @@ package com.spotroute.service;
 import com.spotroute.core.enums.BookingStatus;
 import com.spotroute.core.enums.PaymentStatus;
 import com.spotroute.dto.response.PaymentResponse;
-import com.spotroute.entity.Booking;
-import com.spotroute.entity.DriverProfile;
+import com.spotroute.persistence.entity.Booking;
+import com.spotroute.persistence.entity.DriverProfile;
 import com.spotroute.exception.BadRequestException;
 import com.spotroute.exception.ResourceNotFoundException;
 import com.spotroute.repository.BookingRepository;
@@ -60,7 +60,8 @@ public class PaymentService {
             "redirect_url", redirectUrl != null ? redirectUrl : "http://localhost:5000/payment/callback",
             "customer", Map.of(
                 "email", booking.getUser().getEmail(),
-                "name", booking.getUser().getName(),
+                "firstname", booking.getUser().getFirstName(),
+                "lastname", booking.getUser().getLastName(),
                 "phonenumber", booking.getUser().getPhone()
             ),
             "meta", Map.of("bookingId", booking.getId()),

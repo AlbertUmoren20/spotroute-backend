@@ -1,7 +1,7 @@
 package com.spotroute.dto.response;
 
 import com.spotroute.core.enums.DriverStatus;
-import com.spotroute.entity.DriverProfile;
+import com.spotroute.persistence.entity.DriverProfile;
 import lombok.Builder;
 import lombok.Data;
 

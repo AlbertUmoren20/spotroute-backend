@@ -1,6 +1,6 @@
 package com.spotroute.repository;
 
-import com.spotroute.entity.Ride;
+import com.spotroute.persistence.entity.Ride;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,6 @@
 package com.spotroute.middleware;
 
-import com.spotroute.entity.User;
+import com.spotroute.persistence.entity.User;
 import com.spotroute.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

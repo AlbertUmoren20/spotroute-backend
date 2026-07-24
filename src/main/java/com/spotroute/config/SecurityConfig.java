@@ -55,6 +55,12 @@ public class SecurityConfig {
                 .requestMatchers("/rides").hasRole("DRIVER")
                     .requestMatchers("/bookings").hasRole("DRIVER")
                 .requestMatchers("/wallet/**").hasRole("DRIVER")
+                    .requestMatchers(
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/api-docs/**",
+                            "/v3/api-docs/**"
+                    ).permitAll()
                 // Everything else requires authentication
                 .anyRequest().authenticated()
             )

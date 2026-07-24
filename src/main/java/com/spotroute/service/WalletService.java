@@ -1,8 +1,8 @@
 package com.spotroute.service;
 
 import com.spotroute.dto.response.WalletResponse;
-import com.spotroute.entity.DriverProfile;
-import com.spotroute.entity.WalletTransaction;
+import com.spotroute.persistence.entity.DriverProfile;
+import com.spotroute.persistence.entity.WalletTransaction;
 import com.spotroute.exception.BadRequestException;
 import com.spotroute.exception.ForbiddenException;
 import com.spotroute.repository.DriverProfileRepository;

@@ -1,6 +1,6 @@
 package com.spotroute.dto.response;
 
-import com.spotroute.entity.Route;
+import com.spotroute.persistence.entity.Route;
 import lombok.Builder;
 import lombok.Data;
 

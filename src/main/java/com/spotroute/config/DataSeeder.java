@@ -1,7 +1,7 @@
 package com.spotroute.config;
 
-import com.spotroute.entity.LandMark;
-import com.spotroute.entity.Route;
+import com.spotroute.persistence.entity.LandMark;
+import com.spotroute.persistence.entity.Route;
 import com.spotroute.repository.LandMarkRepository;
 import com.spotroute.repository.RouteRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
