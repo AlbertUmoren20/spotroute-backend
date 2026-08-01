@@ -1,9 +1,11 @@
 package com.spotroute.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spotroute.core.enums.Gender;
 import com.spotroute.core.enums.Role;
 import com.spotroute.core.enums.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,6 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -53,6 +56,16 @@ public class User {
 
     @Column(nullable = false)
     private Role role;
+
+    @JsonIgnore
+    @Size(max = 255)
+    @Column(name = "password_reset_str")
+    private String passwordResetStr;
+
+    @JsonIgnore
+    @Column(name = "password_reset_expiry_date")
+    private Date passwordResetExpiryDate;
+
 
     @CreationTimestamp
     private LocalDateTime createdAt;
