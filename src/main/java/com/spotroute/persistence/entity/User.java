@@ -3,6 +3,7 @@ package com.spotroute.persistence.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spotroute.core.enums.Gender;
 import com.spotroute.core.enums.Role;
+import com.spotroute.core.enums.Source;
 import com.spotroute.core.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -18,7 +19,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter @Setter
 public class User {
 
     @Id
@@ -40,10 +44,10 @@ public class User {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
     private LocalDate dateOfBirth;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
 //    @Column(nullable = false)
@@ -52,10 +56,15 @@ public class User {
     @Column(nullable = false)
     private String city;
 
-    private Status status;
-
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private Status status = Status.ACTIVE;
+
+    @Enumerated(EnumType.STRING)
+    private Source source;
+//    @Column(nullable = false)
+//    @Enumerated(EnumType.STRING)
+//    private Role role;
 
     @JsonIgnore
     @Size(max = 255)

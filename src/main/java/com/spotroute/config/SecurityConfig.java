@@ -46,9 +46,17 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints
-                .requestMatchers("/auth/register", "/auth/login").permitAll()
+                .requestMatchers("/auth/register",
+                        "/auth/login",
+                        "/auth/refresh",
+                        "/auth/logout",
+                        "/auth/initiate-password-reset",
+                        "/auth/logout",
+                        "/auth/validate-reset-token/**",
+                        "/auth/reset-password/**"
+                ).permitAll()
                 .requestMatchers("/rides/available").permitAll()
-                .requestMatchers("/health").permitAll()
+//                .requestMatchers("/health").permitAll()
                 // Payments webhook (Flutterwave calls this without a token)
                 .requestMatchers("/payments/webhook").permitAll()
                 // Driver-only endpoints

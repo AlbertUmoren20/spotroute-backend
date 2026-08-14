@@ -47,16 +47,9 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
 
-    @Transactional
     public AuthResponse register(RegisterRequest req) {
         if (userRepository.existsByEmail(req.getEmail())) {
             throw new BadRequestException("Email is already in use");
-        }
-
-        if (req.getRole() == Role.DRIVER) {
-            if (req.getCarModel() == null || req.getCarPlate() == null || req.getCarColor() == null) {
-                throw new BadRequestException("Car details are required for driver registration");
-            }
         }
         User user = User.builder()
                 .firstName(req.getFirstName())
@@ -67,27 +60,18 @@ public class AuthService {
                 .city(req.getCity())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .phone(req.getPhone())
-                .role(Role.USER)
+                .source(req.getSource())
                 .status(Status.ACTIVE)
                 .build();
         userRepository.save(user);
 
-        DriverProfile driverProfile = null;
-        if (req.getRole() == Role.DRIVER) {
-            driverProfile = DriverProfile.builder()
-                    .user(user)
-                    .carModel(req.getCarModel())
-                    .carPlate(req.getCarPlate())
-                    .carColor(req.getCarColor())
-                    .build();
-            driverProfileRepository.save(driverProfile);
-        }
-        return new AuthResponse( jwtUtil.generateToken(user), null, null);
+        return new AuthResponse(jwtUtil.generateToken(user), null, null);
     }
+
 
     public AuthResponse login(LoginRequest req) {
         User user = userRepository.findByEmail(req.getEmail())
-                .orElseThrow(() -> new BadRequestException(null));
+                .orElseThrow(() -> new BadRequestException("Invalid credentials!"));
 
         if(user == null || !passwordEncoder.matches(req.getPassword(), user.getPassword())){
             log.info("Failed login attempt" + req.getEmail(), user);
@@ -96,16 +80,13 @@ public class AuthService {
         if(user.getStatus() != Status.ACTIVE){
             throw new BadRequestException("User is disabled");
         }
-        DriverProfile driverProfile = null;
-        if (user.getRole() == Role.DRIVER) {
-            driverProfile = driverProfileRepository.findByUserId(user.getId()).orElse(null);
-        }
 
         String token = jwtUtil.generateToken(user);
         String refreshTokenStr = jwtUtil.generateRefreshToken(user);
 
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(refreshTokenStr);
+        refreshToken.setUser(user);
         refreshToken.setExpiryDate(Instant.now().plusMillis(jwtProperties.getRefreshExpiration()));
         refreshTokenRepository.save(refreshToken);
 
@@ -120,6 +101,9 @@ public class AuthService {
             throw new CustomException("Refresh token invalid or expired", HttpStatus.BAD_REQUEST);
         }
         User user = opt.getUser();
+        if (user == null) {
+            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+        }
         if (user.getStatus() != Status.ACTIVE) {
             throw new CustomException("User account is deactivated", HttpStatus.FORBIDDEN);
         }
@@ -160,6 +144,7 @@ public class AuthService {
         loggedInUser.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
         userRepository.save(loggedInUser);
     }
+
 
 
     public void initiatePasswordReset(String email) throws IOException {

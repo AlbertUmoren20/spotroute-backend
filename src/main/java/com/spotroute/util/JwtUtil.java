@@ -130,7 +130,6 @@ public class JwtUtil {
         otherInfo.put("firstName", user.getFirstName());
         otherInfo.put("lastName", user.getLastName());
         otherInfo.put("email", user.getEmail());
-        otherInfo.put("role", user.getRole());
 
 
         return otherInfo;
