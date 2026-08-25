@@ -53,9 +53,16 @@ public class SecurityConfig {
                         "/auth/initiate-password-reset",
                         "/auth/logout",
                         "/auth/validate-reset-token/**",
-                        "/auth/reset-password/**"
+                        "/auth/reset-password/**",
+
+                        "/rides/available",
+                        "/payments/webhook",
+
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/api-docs/**",
+                        "/v3/api-docs/**"
                 ).permitAll()
-                .requestMatchers("/rides/available").permitAll()
 //                .requestMatchers("/health").permitAll()
                 // Payments webhook (Flutterwave calls this without a token)
                 .requestMatchers("/payments/webhook").permitAll()
@@ -63,12 +70,7 @@ public class SecurityConfig {
                 .requestMatchers("/rides").hasRole("DRIVER")
                     .requestMatchers("/bookings").hasRole("DRIVER")
                 .requestMatchers("/wallet/**").hasRole("DRIVER")
-                    .requestMatchers(
-                            "/swagger-ui/**",
-                            "/swagger-ui.html",
-                            "/api-docs/**",
-                            "/v3/api-docs/**"
-                    ).permitAll()
+
                 // Everything else requires authentication
                 .anyRequest().authenticated()
             )

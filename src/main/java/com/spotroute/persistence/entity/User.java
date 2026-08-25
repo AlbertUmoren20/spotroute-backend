@@ -46,6 +46,8 @@ public class User {
 
     private LocalDate dateOfBirth;
 
+    private String profilePicture;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;

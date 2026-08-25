@@ -26,7 +26,8 @@ public class SecurityUtil {
 
     public static User getLoggedInUser(HttpServletRequest request){
         String token = request.getHeader("Authorization");
-        if(token != null){
+        if(token != null && token.startsWith("Bearer ")){
+            token = token.substring(7);
             String[] details = token.split("\\.");
             byte[] decodeByte = Base64.getDecoder().decode(details[1]);
             String decodeValue = new String(decodeByte, StandardCharsets.UTF_8);

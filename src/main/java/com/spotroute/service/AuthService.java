@@ -159,7 +159,7 @@ public class AuthService {
         userRepository.save(user);
 
         // GENERATE RESET TOKEN AND SEND AN EMAIL
-//        String url =  "/reset-password?token=" + token;
+//        String url = "/reset-password?token=" + token;
 //        String link = "<a href=" + url + ">RESET PASSWORD</a>";
 //        String body = "Kindly click on the below link to reset your password.<br> " +
 //                "<b>Link</b> : " + link + "<br>";

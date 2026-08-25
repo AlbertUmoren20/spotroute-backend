@@ -105,7 +105,7 @@ public class JwtUtil {
      * Validate the provided token against the given username.
      */
     public boolean isValid(String token, UserDetails userDetails) {
-        return userDetails.equals(extractUsername(token)) && !isExpired(token);
+        return userDetails.getUsername().equals(extractUsername(token)) && !isExpired(token);
 //        try {
 //            String email = extractEmail(token);
 //            return email.equals(userDetails.getUsername()) && !isExpired(token);
