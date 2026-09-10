@@ -1,16 +1,20 @@
 package com.spotroute.service;
 
 import com.spotroute.core.enums.BookingStatus;
+import com.spotroute.core.enums.DriverStatus;
 import com.spotroute.core.enums.PaymentStatus;
 import com.spotroute.core.enums.RideStatus;
 import com.spotroute.dto.request.CreateBookingRequest;
 import com.spotroute.dto.response.BookingResponse;
+import com.spotroute.exception.ForbiddenException;
 import com.spotroute.persistence.entity.Booking;
+import com.spotroute.persistence.entity.DriverProfile;
 import com.spotroute.persistence.entity.Ride;
 import com.spotroute.persistence.entity.User;
 import com.spotroute.exception.BadRequestException;
 import com.spotroute.exception.ResourceNotFoundException;
 import com.spotroute.repository.BookingRepository;
+import com.spotroute.repository.DriverProfileRepository;
 import com.spotroute.repository.RideRepository;
 import com.spotroute.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,19 +31,27 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final RideRepository rideRepository;
     private final UserRepository userRepository;
+    private final DriverProfileRepository driverProfileRepository;
 
     @Transactional
     public BookingResponse createBooking(String userEmail, CreateBookingRequest req) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        Ride ride = rideRepository.findById(req.getRideId())
+        Ride ride = rideRepository.findByIdForUpdate(req.getRideId())
                 .orElseThrow(() -> new ResourceNotFoundException("Ride not found"));
 
         if (ride.getStatus() != RideStatus.SCHEDULED) {
             throw new BadRequestException("Ride is no longer available for booking");
         }
 
+        DriverProfile driver = driverProfileRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new ForbiddenException("Driver profile not found"));
+
+        if (driver.getStatus() != DriverStatus.ACTIVE){
+            throw new ForbiddenException("Driver account is not active");
+        }
+        
         if (ride.availableSeats() < req.getSeatCount()) {
             throw new BadRequestException("Not enough seats available. Only " + ride.availableSeats() + " left.");
         }
@@ -59,7 +71,7 @@ public class BookingService {
                 .pickupPoint(req.getPickupPoint())
                 .totalAmount(total)
                 .status(BookingStatus.PENDING)
-                .paymentStatus(PaymentStatus.PENDING)
+//                .paymentStatus(PaymentStatus.PENDING)
                 .build();
 
         bookingRepository.save(booking);

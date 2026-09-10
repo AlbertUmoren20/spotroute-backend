@@ -29,7 +29,7 @@ public class AuthController {
     private final AuthService authService;
     private final String classTag = "AuthController";
 
-    @Operation(summary = "User/Driver Registration", description = "", tags = classTag)
+    @Operation(summary = "User Registration", description = "", tags = classTag)
     @PostMapping("/register")
     public ResponseEntity<AppResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest req) {
         AppUtil.setStartTime();
@@ -44,7 +44,7 @@ public class AuthController {
         return ResponseEntity.ok().body(appResponse);
     }
 
-    @Operation(summary = "User/Driver Login", description = "", tags = classTag)
+    @Operation(summary = "User Login", description = "", tags = classTag)
     @PostMapping("/login")
     public ResponseEntity<AppResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest req) {
         AppUtil.setStartTime();
@@ -59,7 +59,7 @@ public class AuthController {
         return ResponseEntity.ok().body(appResponse);
     }
 
-    @Operation(summary = "Refresh Token", description = "Refresh access token with refresh token.", tags = "Auth Controller")
+    @Operation(summary = "Refresh Token", description = "Refresh access token with refresh token.", tags = classTag)
     @PostMapping("/refresh")
     public ResponseEntity<AppResponse<AuthResponse>> refresh(@Valid @RequestBody RefreshRequest req) {
         AppUtil.setStartTime();
@@ -74,7 +74,7 @@ public class AuthController {
         return ResponseEntity.ok().body(response);
     }
 
-    @Operation(summary = "Logout", description = "Logout with refresh token.", tags = "Auth Controller")
+    @Operation(summary = "Logout", description = "Logout with refresh token.",tags = classTag)
     @PostMapping("/logout")
     public ResponseEntity<AppResponse<Void>> logout(@Valid @RequestBody LogoutRequest req) {
         AppUtil.setStartTime();

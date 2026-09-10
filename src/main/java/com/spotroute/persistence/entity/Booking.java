@@ -32,6 +32,9 @@ public class Booking {
     @Column(nullable = false)
     private String pickupPoint;
 
+    @Column(nullable = false)
+    private String dropoffPoint;
+
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 

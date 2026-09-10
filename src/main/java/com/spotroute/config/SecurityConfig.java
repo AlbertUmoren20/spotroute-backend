@@ -54,10 +54,8 @@ public class SecurityConfig {
                         "/auth/logout",
                         "/auth/validate-reset-token/**",
                         "/auth/reset-password/**",
-
                         "/rides/available",
                         "/payments/webhook",
-
                         "/swagger-ui/**",
                         "/swagger-ui.html",
                         "/api-docs/**",

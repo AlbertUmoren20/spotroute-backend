@@ -1,5 +1,6 @@
 package com.spotroute.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,11 +18,13 @@ public class Route {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String origin;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "origin_id", nullable = false)
+    private Location origin;
 
-    @Column(nullable = false)
-    private String destination;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "destination_id", nullable = false)
+    private Location destination;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal pricePerSeat;

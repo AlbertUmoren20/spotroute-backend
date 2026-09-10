@@ -26,7 +26,7 @@ public class BookingController {
 
     @Operation(summary = "Create Booking", description = "Users(Drivers) are able to create booking" , tags = classTag)
     @PostMapping
-    @PreAuthorize("hasRole('DRIVER')")
+//    @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<BookingResponse>> createBooking(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody CreateBookingRequest req) {

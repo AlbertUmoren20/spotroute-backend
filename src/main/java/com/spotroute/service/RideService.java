@@ -1,5 +1,6 @@
 package com.spotroute.service;
 
+import com.spotroute.core.exceptions.CustomException;
 import com.spotroute.dto.request.CreateRideRequest;
 //import com.spotroute.Kafka.KafkaProducer;
 import com.spotroute.dto.response.RideResponse;
@@ -13,7 +14,9 @@ import com.spotroute.repository.DriverProfileRepository;
 import com.spotroute.repository.RideRepository;
 import com.spotroute.repository.RouteRepository;
 import com.spotroute.repository.UserRepository;
+import com.spotroute.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,10 +41,11 @@ public class RideService {
     }
 
     @Transactional
-    public RideResponse createRide(String userEmail, CreateRideRequest req) {
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
+    public RideResponse createRide(CreateRideRequest req) {
+        User user = SecurityUtil.getLoggedInUserFromContext();
+        if (user == null) {
+            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+        }
         DriverProfile driver = driverProfileRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new ForbiddenException("Driver profile not found"));
 

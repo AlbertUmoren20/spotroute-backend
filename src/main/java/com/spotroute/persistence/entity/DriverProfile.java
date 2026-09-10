@@ -36,9 +36,9 @@ public class DriverProfile {
     @Column(nullable = false)
     private String carColor;
 
-    @Column(precision = 15, scale = 2)
-    @Builder.Default
-    private BigDecimal walletBalance = BigDecimal.ZERO;
+//    @Column(precision = 15, scale = 2)
+//    @Builder.Default
+//    private BigDecimal walletBalance = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

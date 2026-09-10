@@ -35,9 +35,8 @@ public class RideController {
     @PostMapping
     @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<RideResponse>> createRide(
-            @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody CreateRideRequest req) {
-        RideResponse ride = rideService.createRide(userDetails.getUsername(), req);
+        RideResponse ride = rideService.createRide(req);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Ride created", ride));
     }
 

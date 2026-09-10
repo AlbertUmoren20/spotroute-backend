@@ -24,7 +24,7 @@ public class DriverProfileResponse {
                 .carModel(dp.getCarModel())
                 .carPlate(dp.getCarPlate())
                 .carColor(dp.getCarColor())
-                .walletBalance(dp.getWalletBalance())
+//                .walletBalance(dp.getWalletBalance())
                 .status(dp.getStatus())
                 .build();
     }
