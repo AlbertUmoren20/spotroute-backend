@@ -1,7 +1,7 @@
 package com.spotroute.dto.response;
 
 import com.spotroute.core.enums.RideStatus;
-import com.spotroute.entity.Ride;
+import com.spotroute.persistence.entity.Ride;
 import lombok.Builder;
 import lombok.Data;
 
@@ -28,7 +28,7 @@ public class RideResponse {
         return RideResponse.builder()
                 .id(ride.getId())
                 .driverId(ride.getDriver().getId())
-                .driverName(ride.getDriver().getUser().getName())
+                .driverName(ride.getDriver().getUser().getFirstName() + " " + ride.getDriver().getUser().getLastName())
                 .driverCarModel(ride.getDriver().getCarModel())
                 .driverCarColor(ride.getDriver().getCarColor())
                 .driverCarPlate(ride.getDriver().getCarPlate())

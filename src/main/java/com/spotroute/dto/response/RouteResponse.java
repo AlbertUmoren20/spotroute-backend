@@ -1,6 +1,7 @@
 package com.spotroute.dto.response;
 
-import com.spotroute.entity.Route;
+import com.spotroute.persistence.entity.Location;
+import com.spotroute.persistence.entity.Route;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,8 +12,8 @@ import java.util.List;
 @Builder
 public class RouteResponse {
     private Long id;
-    private String origin;
-    private String destination;
+    private Location origin;
+    private Location destination;
     private BigDecimal pricePerSeat;
     private String description;
     private List<String> pickupPoints;

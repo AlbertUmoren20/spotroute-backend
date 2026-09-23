@@ -1,6 +1,10 @@
 # SpotRoute Backend — Spring Boot
 
-Spring Boot migration of the SpotRoute pooled ride-sharing backend.
+**What Is SpotRoute**
+
+SpotRoute is a carpooling and shared-mobility technology platform developed to address the daily transportation needs of Lagos commuters. The platform connects private vehicle owners with commuters travelling along the same route, converting unused vehicle capacity into an affordable, comfortable, and reliable mode of transport.
+
+SpotRoute occupies the space between costly private ride-hailing services and overcrowded public transit: it offers the comfort and safety of a private vehicle, shared among passengers travelling the same route, at a fixed and transparent price agreed in advance.
 
 ## Stack
 
@@ -50,7 +54,7 @@ The server starts on **http://localhost:8080/api**.
 | Variable | Description | Default |
 |---|---|---|
 | `DB_HOST` | MySQL host | `localhost` |
-| `DB_PORT` | MySQL port | `3306` |
+| `DB_PORT` | MySQL port | `...` |
 | `DB_NAME` | Database name | `spotroute` |
 | `DB_USER` | MySQL user | `root` |
 | `DB_PASSWORD` | MySQL password | _(empty)_ |

@@ -1,0 +1,18 @@
+# Maven
+target/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Environment
+.env
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+
+#applictionproperties
+src/main/resources/application.properties

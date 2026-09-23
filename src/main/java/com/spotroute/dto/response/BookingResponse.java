@@ -2,7 +2,7 @@ package com.spotroute.dto.response;
 
 import com.spotroute.core.enums.BookingStatus;
 import com.spotroute.core.enums.PaymentStatus;
-import com.spotroute.entity.Booking;
+import com.spotroute.persistence.entity.Booking;
 import lombok.Builder;
 import lombok.Data;
 
