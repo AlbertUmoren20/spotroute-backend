@@ -2,8 +2,11 @@ package com.spotroute.controller;
 
 import com.spotroute.dto.request.CreateBookingRequest;
 import com.spotroute.dto.response.ApiResponse;
+import com.spotroute.dto.response.AppResponse;
+import com.spotroute.dto.response.AuthResponse;
 import com.spotroute.dto.response.BookingResponse;
 import com.spotroute.service.BookingService;
+import com.spotroute.util.AppUtil;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +33,9 @@ public class BookingController {
     public ResponseEntity<ApiResponse<BookingResponse>> createBooking(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody CreateBookingRequest req) {
+        AppUtil.setStartTime();
         BookingResponse booking = bookingService.createBooking(userDetails.getUsername(), req);
+        AppUtil.stopTimer();
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Booking created", booking));
     }
 
