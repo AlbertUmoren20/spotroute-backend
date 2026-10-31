@@ -1,6 +1,7 @@
 package com.spotroute.dto.response;
 
-import com.spotroute.entity.Route;
+//import com.spotroute.persistence.entity.Location;
+import com.spotroute.persistence.entity.Route;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,7 +16,8 @@ public class RouteResponse {
     private String destination;
     private BigDecimal pricePerSeat;
     private String description;
-    private List<String> pickupPoints;
+//    private List<String> pickupPoints;
+    private List<StopResponse> stops;
 
     public static RouteResponse from(Route route) {
         return RouteResponse.builder()
@@ -24,7 +26,7 @@ public class RouteResponse {
                 .destination(route.getDestination())
                 .pricePerSeat(route.getPricePerSeat())
                 .description(route.getDescription())
-                .pickupPoints(route.getPickupPoints())
+                .stops(route.getStops().stream().map(StopResponse::from).toList())
                 .build();
     }
 }

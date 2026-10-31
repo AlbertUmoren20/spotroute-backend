@@ -1,7 +1,5 @@
 package com.spotroute.dto.response;
 
-import com.spotroute.entity.Booking;
-import com.spotroute.entity.LandMark;
 import lombok.Builder;
 import lombok.Data;
 

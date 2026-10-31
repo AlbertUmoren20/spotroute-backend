@@ -2,8 +2,11 @@ package com.spotroute.controller;
 
 import com.spotroute.dto.request.CreateBookingRequest;
 import com.spotroute.dto.response.ApiResponse;
+import com.spotroute.dto.response.AppResponse;
+import com.spotroute.dto.response.AuthResponse;
 import com.spotroute.dto.response.BookingResponse;
 import com.spotroute.service.BookingService;
+import com.spotroute.util.AppUtil;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +18,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/bookings")
+@RequestMapping("v1/bookings")
 @RequiredArgsConstructor
 public class BookingController {
 
@@ -26,12 +30,15 @@ public class BookingController {
 
     @Operation(summary = "Create Booking", description = "Users(Drivers) are able to create booking" , tags = classTag)
     @PostMapping
-    @PreAuthorize("hasRole('DRIVER')")
+//    @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<BookingResponse>> createBooking(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable UUID rideId,
             @Valid @RequestBody CreateBookingRequest req) {
-        BookingResponse booking = bookingService.createBooking(userDetails.getUsername(), req);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Booking created", booking));
+        AppUtil.setStartTime();
+        BookingResponse booking = bookingService.createBooking(req, rideId);
+        AppUtil.stopTimer();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.ok("Booking created", booking));
     }
 
     @Operation(summary = "Get User booking history", description = "Users are ale to send a post request to view their ride history" , tags = classTag)
@@ -44,8 +51,7 @@ public class BookingController {
     @Operation(summary = "User's booking details", description = "Users booking details" , tags = classTag)
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<BookingResponse>> getBooking(
-            @PathVariable String id,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(ApiResponse.ok(bookingService.getBooking(id, userDetails.getUsername())));
+            @PathVariable String id) {
+        return ResponseEntity.ok(ApiResponse.ok(bookingService.getBooking(id)));
     }
 }

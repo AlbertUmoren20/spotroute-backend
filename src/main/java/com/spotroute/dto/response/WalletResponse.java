@@ -1,6 +1,6 @@
 package com.spotroute.dto.response;
 
-import com.spotroute.entity.WalletTransaction;
+import com.spotroute.persistence.entity.WalletTransaction;
 import lombok.Builder;
 import lombok.Data;
 

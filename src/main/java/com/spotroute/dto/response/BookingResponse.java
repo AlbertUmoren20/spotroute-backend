@@ -2,7 +2,8 @@ package com.spotroute.dto.response;
 
 import com.spotroute.core.enums.BookingStatus;
 import com.spotroute.core.enums.PaymentStatus;
-import com.spotroute.entity.Booking;
+import com.spotroute.persistence.entity.Booking;
+import com.spotroute.persistence.entity.Stop;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,11 +17,12 @@ public class BookingResponse {
     private String userId;
     private RideResponse ride;
     private int seatCount;
-    private String pickupPoint;
+//    private String pickupPoint;
+    private Stop pickupStop;
+    private Stop destinationStop;
     private BigDecimal totalAmount;
     private BookingStatus status;
-    private PaymentStatus paymentStatus;
-    private String paymentReference;
+//    private String paymentReference;
     private LocalDateTime createdAt;
 
     public static BookingResponse from(Booking booking) {
@@ -29,11 +31,10 @@ public class BookingResponse {
                 .userId(booking.getUser().getId())
                 .ride(RideResponse.from(booking.getRide()))
                 .seatCount(booking.getSeatCount())
-                .pickupPoint(booking.getPickupPoint())
+                .pickupStop(booking.getPickupStop())
+                .destinationStop(booking.getDestinationStop())
                 .totalAmount(booking.getTotalAmount())
                 .status(booking.getStatus())
-                .paymentStatus(booking.getPaymentStatus())
-                .paymentReference(booking.getPaymentReference())
                 .createdAt(booking.getCreatedAt())
                 .build();
     }

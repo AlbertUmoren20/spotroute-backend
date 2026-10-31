@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -46,18 +47,32 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints
-                .requestMatchers("/auth/register", "/auth/login").permitAll()
-                .requestMatchers("/rides/available").permitAll()
-                .requestMatchers("/health").permitAll()
-                // Payments webhook (Flutterwave calls this without a token)
-                .requestMatchers("/payments/webhook").permitAll()
-                // Driver-only endpoints
-                .requestMatchers("/rides").hasRole("DRIVER")
-                    .requestMatchers("/bookings").hasRole("DRIVER")
-                .requestMatchers("/wallet/**").hasRole("DRIVER")
-                // Everything else requires authentication
-                .anyRequest().authenticated()
+                .requestMatchers("/auth/register",
+                        "/auth/login",
+                        "/auth/refresh",
+                        "/auth/logout",
+                        "/auth/initiate-password-reset",
+                        "/auth/logout",
+                        "/auth/validate-reset-token/**",
+                        "/payments/webhook",
+                        "/auth/reset-password/**",
+                        "/rides/available",
+                        "/payments/webhook",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/api-docs/**",
+                        "/v3/api-docs/**"
+                ).permitAll()
+
+                .requestMatchers("/rides",
+                        "/bookings",
+                        "/wallet/**")
+                    .hasRole("DRIVER")
+
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .anyRequest().authenticated()
             )
+
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -1,13 +1,15 @@
 package com.spotroute.controller;
 
-import com.spotroute.entity.LandMark;
+import com.spotroute.core.exceptions.CustomException;
+import com.spotroute.persistence.entity.LandMark;
+import com.spotroute.persistence.entity.User;
 import com.spotroute.service.LandMarkService;
 import com.spotroute.util.AppUtil;
 import com.spotroute.dto.response.ApiResponse;
 import com.spotroute.dto.response.AppResponse;
-import com.spotroute.dto.response.LandMarkResponse;
 import com.spotroute.dto.response.RouteResponse;
 import com.spotroute.repository.RouteRepository;
+import com.spotroute.util.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,24 +17,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/routes")
+@RequestMapping("/v1/routes")
 @RequiredArgsConstructor
 public class RouteController {
 
     private final RouteRepository routeRepository;
     private final LandMarkService landMarkService;
-    private final String classTag = "RouteController";
+    private final String classTag = "Route Controller";
 
     @GetMapping
     @Operation(summary = "Users to get all routes", description = "" , tags = classTag)
     public ResponseEntity<ApiResponse<List<RouteResponse>>> getAllRoutes() {
-        List<RouteResponse> routes = routeRepository.findAll()
+        AppUtil.setStartTime();
+        User user = SecurityUtil.getLoggedInUserFromContext();
+        if (user == null) {
+            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+        }
+        List<RouteResponse> routes = routeRepository.findAllWithStops()
                 .stream()
                 .map(RouteResponse::from)
                 .toList();
+        AppUtil.stopTimer();
         return ResponseEntity.ok(ApiResponse.ok(routes));
     }
 

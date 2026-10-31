@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.context.WebServerApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
+import java.util.UUID;
+
 @Data
 @Component
 @Slf4j
@@ -21,5 +24,9 @@ public class AppUtil {
         Long start = startTime.get();
         startTime.remove();
         return start != null ? String.valueOf(System.currentTimeMillis() - start) : "0";
+    }
+
+    public static String generateVerificationCode() {
+        return Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes());
     }
 }

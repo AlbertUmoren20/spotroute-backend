@@ -1,6 +1,6 @@
 package com.spotroute.repository;
 
-import com.spotroute.entity.WalletTransaction;
+import com.spotroute.persistence.entity.WalletTransaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
