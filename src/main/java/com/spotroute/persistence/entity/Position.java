@@ -21,7 +21,8 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(columnDefinition = "POINT SRID 4326", nullable = false)
+//    @Column(columnDefinition = "POINT SRID 4326", nullable = false)
+    @Column(columnDefinition = "geography(Point,4326)",  nullable = false)
     private Point coordinates;
 
     private String formattedAddress;
@@ -29,6 +30,9 @@ public class Position {
 
     @Enumerated(EnumType.STRING)
     private PositionRole role;
+
+    @Column(name = "matched_stop_id")
+    private UUID matchedStopId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

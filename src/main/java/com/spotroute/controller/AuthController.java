@@ -59,6 +59,38 @@ public class AuthController {
         return ResponseEntity.ok().body(appResponse);
     }
 
+    @Operation(summary = "Request phone verification code", description = "Requests an OTP for the authenticated user's phone number.", tags = classTag)
+    @PostMapping("/request-phone-otp")
+    public ResponseEntity<AppResponse<Void>> requestPhoneOtp() {
+        AppUtil.setStartTime();
+        authService.requestPhoneVerificationOtp(SecurityUtil.getLoggedInUserFromContext());
+        String formattedExecTime = AppUtil.stopTimer();
+        AppResponse<Void> response = AppResponse.<Void>builder()
+                .status(HttpStatus.OK.toString())
+                .message("Phone verification code requested successfully")
+                .data(null)
+                .execTime(formattedExecTime)
+                .error("")
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Verify phone number", description = "Verifies the authenticated user's phone number with an OTP.", tags = classTag)
+    @PostMapping("/verify-phone-otp")
+    public ResponseEntity<AppResponse<Void>> verifyPhoneOtp(@Valid @RequestBody VerifyPhoneOtpRequest req) {
+        AppUtil.setStartTime();
+        authService.verifyPhoneOtp(SecurityUtil.getLoggedInUserFromContext(), req.getOtp());
+        String formattedExecTime = AppUtil.stopTimer();
+        AppResponse<Void> response = AppResponse.<Void>builder()
+                .status(HttpStatus.OK.toString())
+                .message("Phone number verified successfully")
+                .data(null)
+                .execTime(formattedExecTime)
+                .error("")
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "Refresh Token", description = "Refresh access token with refresh token.", tags = classTag)
     @PostMapping("/refresh")
     public ResponseEntity<AppResponse<AuthResponse>> refresh(@Valid @RequestBody RefreshRequest req) {

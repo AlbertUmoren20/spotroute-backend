@@ -29,11 +29,13 @@ public class Booking {
     @Column(nullable = false)
     private int seatCount;
 
-    @Column(nullable = false)
-    private String pickupPoint;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "pickup_stop_id", nullable = false)
+    private Stop pickupStop;
 
-    @Column(nullable = false)
-    private String dropoffPoint;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "destination_stop_id", nullable = false)
+    private Stop destinationStop;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
@@ -41,15 +43,15 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private BookingStatus status = BookingStatus.PENDING;
+    private BookingStatus status = BookingStatus.CONFIRMED;
 
     // Payment tracking
-    private String paymentReference;
-    private String flutterwaveTransactionId;
-
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+//    private String paymentReference;
+//    private String flutterwaveTransactionId;
+//
+//    @Enumerated(EnumType.STRING)
+//    @Builder.Default
+//    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

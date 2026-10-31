@@ -1,13 +1,13 @@
 package com.spotroute.config;
 
-import com.spotroute.persistence.entity.LandMark;
-import com.spotroute.persistence.entity.Location;
 import com.spotroute.persistence.entity.Route;
-import com.spotroute.repository.LandMarkRepository;
-import com.spotroute.repository.LocationRepository;
+import com.spotroute.persistence.entity.Stop;
 import com.spotroute.repository.RouteRepository;
+import com.spotroute.repository.StopRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -20,147 +20,59 @@ import java.util.List;
 public class DataSeeder implements CommandLineRunner {
 
     private final RouteRepository routeRepository;
-    private final LandMarkRepository landMarkRepository;
-    private final LocationRepository locationRepository;
+    private final StopRepository stopRepository;
+    private final GeometryFactory geometryFactory;
 
     @Override
     public void run(String... args) {
-       seedLocation();
-        if (routeRepository.count() == 0) {
-            log.info("Seeding default routes...");
-
-            // Get locations from database
-            Location gbagada = getLocation("Gbagada");
-            Location victoriaIsland = getLocation("Victoria Island");
-
-            Location yaba = getLocation("Yaba");
-            Location lekki = getLocation("Lekki");
-
-            Location surulere = getLocation("Surulere");
-            Location ikoyi = getLocation("Ikoyi");
-
-            Location ikeja = getLocation("Ikeja");
-            Location marina = getLocation("Marina");
-
-
-            List<Route> routes = List.of(
-                    Route.builder()
-                            .origin(gbagada)
-                            .destination(victoriaIsland)
-                            .pricePerSeat(new BigDecimal("1000.00"))
-                            .description("Gbagada → Victoria Island via 3rd Mainland Bridge")
-                            .pickupPoints(List.of("Gbagada Phase 1", "Gbagada Phase 2", "Anthony", "Maryland"))
-                            .build(),
-
-                    Route.builder()
-                            .origin(yaba)
-                            .destination(lekki)
-                            .pricePerSeat(new BigDecimal("1500.00"))
-                            .description("Yaba → Lekki via Eko Bridge")
-                            .pickupPoints(List.of("Yaba Bus Stop", "Jibowu", "Ojuelegba"))
-                            .build(),
-
-                    Route.builder()
-                            .origin(surulere)
-                            .destination(ikoyi)
-                            .pricePerSeat(new BigDecimal("800.00"))
-                            .description("Surulere → Ikoyi via Osborne Road")
-                            .pickupPoints(List.of("Surulere Stadium", "Alaka", "Lawanson"))
-                            .build(),
-
-                    Route.builder()
-                            .origin(ikeja)
-                            .destination(marina)
-                            .pricePerSeat(new BigDecimal("1200.00"))
-                            .description("Ikeja → Marina via Lagos Island")
-                            .pickupPoints(List.of("Ikeja Along", "Allen Avenue", "Ogba"))
-                            .build()
-            );
-            List<Route> savedRoutes = routeRepository.saveAll(routes);
-            log.info("Seeded {} routes.", routes.size());
-
-            List<LandMark> landmarks = List.of(
-                    LandMark.builder()
-                            .name("Sabo Yaba")
-                            .lat(new BigDecimal("6.5095"))
-                            .lng(new BigDecimal("3.3711"))
-                            .sequenceOrder(1)
-                            .route(savedRoutes.get(0))// route already has an ID now
-                            .build(),
-
-                    LandMark.builder()
-                            .name("Third Mainland Bridge")
-                            .lat(new BigDecimal("6.4869"))
-                            .lng(new BigDecimal("3.3903"))
-                            .sequenceOrder(1)
-                            .route(savedRoutes.get(1))  // Yaba → Lekki
-                            .build(),
-
-
-                    LandMark.builder()
-                            .name("Osborne Road")
-                            .lat(new BigDecimal("6.4550"))
-                            .lng(new BigDecimal("3.4200"))
-                            .sequenceOrder(1)
-                            .route(savedRoutes.get(2)) // Surulere → Ikoyi
-                            .build(),
-
-                    LandMark.builder()
-                            .name("Lagos Island")
-                            .lat(new BigDecimal("6.4541"))
-                            .lng(new BigDecimal("3.3947"))
-                            .sequenceOrder(1)
-                            .route(savedRoutes.get(3)) // Ikeja → Marina
-                            .build()
-            );
-            landMarkRepository.saveAll(landmarks);
-            log.info("Seeded {} routes and {} landmarks.", savedRoutes.size(), landmarks.size());
+        if (routeRepository.count() > 0) {
+            log.info("Routes already seeded, skipping.");
+            return;
         }
-    }
 
-    public void seedLocation(){
+        log.info("Seeding routes and stops...");
 
-        List<String> locationNames = List.of(
-                "Gbagada",
-                "Charley Boy",
-                "Anthony",
-                "Law School",
-                "Falomo",
-                "Lekki",
-                "Ajah",
-                "Victoria Island",
-                "Yaba",
-                "Surulere",
-                "Ikoyi",
-                "Ikeja",
-                "Marina",
-                "Maryland",
-                "Jibowu",
-                "Ojuelegba",
-                "Gbagada Phase 1",
-                "Gbagada Phase 2",
-                "Yaba Bus Stop",
-                "Surulere Stadium",
-                "Alaka",
-                "Lawanson",
-                "Ikeja Along",
-                "Allen Avenue",
-                "Ogba"
+        Route gbagadaToVI = Route.builder()
+                .origin("Gbagada")
+                .destination("Victoria Island")
+                .pricePerSeat(new BigDecimal("1000.00"))
+                .description("Gbagada → Victoria Island via 3rd Mainland Bridge")
+                .build();
+
+        Route yabaToLekki = Route.builder()
+                .origin("Yaba")
+                .destination("Lekki")
+                .pricePerSeat(new BigDecimal("1500.00"))
+                .description("Yaba → Lekki via Eko Bridge")
+                .build();
+
+        List<Route> savedRoutes = routeRepository.saveAll(List.of(gbagadaToVI, yabaToLekki));
+        Route savedGbagadaToVI = savedRoutes.get(0);
+        Route savedYabaToLekki = savedRoutes.get(1);
+        log.info("Seeded {} routes.", savedRoutes.size());
+
+        List<Stop> stops = List.of(
+                stop("Gbagada Phase 1", 3.3890, 6.5560, 1, savedGbagadaToVI),
+                stop("Anthony", 3.3650, 6.5850, 2, savedGbagadaToVI),
+                stop("Third Mainland Bridge", 3.3903, 6.4869, 3, savedGbagadaToVI),
+                stop("Victoria Island", 3.4219, 6.4281, 4, savedGbagadaToVI),
+
+                stop("Yaba Bus Stop", 3.3711, 6.5095, 1, savedYabaToLekki),
+                stop("Jibowu", 3.3750, 6.5180, 2, savedYabaToLekki),
+                stop("Eko Bridge", 3.3800, 6.4650, 3, savedYabaToLekki),
+                stop("Lekki Phase 1", 3.4726, 6.4474, 4, savedYabaToLekki)
         );
-        locationNames.forEach(name -> {
-            if (!locationRepository.existsByNameIgnoreCase(name)) {
-                locationRepository.save(
-                        Location.builder().name(name).build()
-                );
-            }
-        });
-        log.info("Locations seeded successfully.");
-    }
-    private Location getLocation(String name) {
-        return locationRepository
-                .findByNameIgnoreCase(name)
-                .orElseThrow(() ->
-                        new IllegalStateException("Location not found: " + name));
-        }
+
+        stopRepository.saveAll(stops);
+        log.info("Seeded {} stops.", stops.size());
     }
 
+    private Stop stop(String name, double lng, double lat, int sequenceOrder, Route route) {
+        return Stop.builder()
+                .name(name)
+                .coordinates(geometryFactory.createPoint(new Coordinate(lng, lat)))
+                .sequenceOrder(sequenceOrder)
+                .route(route)
+                .build();
+    }
+}

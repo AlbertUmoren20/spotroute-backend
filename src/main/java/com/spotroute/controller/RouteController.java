@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/routes/v1")
+@RequestMapping("/v1/routes")
 @RequiredArgsConstructor
 public class RouteController {
 
@@ -30,14 +30,16 @@ public class RouteController {
     @GetMapping
     @Operation(summary = "Users to get all routes", description = "" , tags = classTag)
     public ResponseEntity<ApiResponse<List<RouteResponse>>> getAllRoutes() {
+        AppUtil.setStartTime();
         User user = SecurityUtil.getLoggedInUserFromContext();
         if (user == null) {
             throw new CustomException("User not found", HttpStatus.NOT_FOUND);
         }
-        List<RouteResponse> routes = routeRepository.findAll()
+        List<RouteResponse> routes = routeRepository.findAllWithStops()
                 .stream()
                 .map(RouteResponse::from)
                 .toList();
+        AppUtil.stopTimer();
         return ResponseEntity.ok(ApiResponse.ok(routes));
     }
 

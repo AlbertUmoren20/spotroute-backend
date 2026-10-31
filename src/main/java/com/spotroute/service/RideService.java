@@ -7,8 +7,6 @@ import com.spotroute.dto.response.RideResponse;
 import com.spotroute.persistence.entity.DriverProfile;
 import com.spotroute.persistence.entity.Ride;
 import com.spotroute.persistence.entity.Route;
-import com.spotroute.persistence.entity.User;
-import com.spotroute.exception.ForbiddenException;
 import com.spotroute.exception.ResourceNotFoundException;
 import com.spotroute.repository.DriverProfileRepository;
 import com.spotroute.repository.RideRepository;
@@ -22,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,14 +40,11 @@ public class RideService {
     }
 
     @Transactional
-    public RideResponse createRide(CreateRideRequest req) {
-        User user = SecurityUtil.getLoggedInUserFromContext();
-        if (user == null) {
-            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+    public RideResponse createRide(CreateRideRequest req ) {
+       DriverProfile driver = SecurityUtil.getLoggedInDriver();
+        if (driver == null) {
+            throw new CustomException("Driver not found", HttpStatus.NOT_FOUND);
         }
-        DriverProfile driver = driverProfileRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new ForbiddenException("Driver profile not found"));
-
         Route route = routeRepository.findById(req.getRouteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Route not found: " + req.getRouteId()));
 
@@ -62,16 +58,15 @@ public class RideService {
         return RideResponse.from(rideRepository.save(ride));
     }
 
-    public List<RideResponse> getDriverRides(String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        DriverProfile driver = driverProfileRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new ForbiddenException("Driver profile not found"));
-
+    public List<RideResponse> getDriverRides() {
+        DriverProfile driver = SecurityUtil.getLoggedInDriver();
         return rideRepository.findByDriverIdOrderByDepartureTimeDesc(driver.getId())
                 .stream()
                 .map(RideResponse::from)
                 .toList();
+    }
+
+    public Ride findById(UUID id) {
+        return rideRepository.findById(id.toString()).orElseThrow(() -> new ResourceNotFoundException("Ride not found"));
     }
 }

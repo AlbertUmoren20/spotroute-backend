@@ -21,9 +21,9 @@ public class DriverProfileResponse {
         if (dp == null) return null;
         return DriverProfileResponse.builder()
                 .id(dp.getId())
-                .carModel(dp.getCarModel())
-                .carPlate(dp.getCarPlate())
-                .carColor(dp.getCarColor())
+                .carModel(dp.getVehicleModel())
+                .carPlate(dp.getVehiclePlate())
+                .carColor(dp.getVehicleColor())
 //                .walletBalance(dp.getWalletBalance())
                 .status(dp.getStatus())
                 .build();

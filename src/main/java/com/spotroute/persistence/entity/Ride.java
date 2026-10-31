@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "rides")
@@ -15,7 +16,7 @@ public class Ride {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id", nullable = false)
@@ -40,6 +41,9 @@ public class Ride {
     @Builder.Default
     private RideStatus status = RideStatus.SCHEDULED;
 
+    @Version
+    private Long version;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -49,6 +53,5 @@ public class Ride {
     public int availableSeats() {
         return totalSeats - bookedSeats;
     }
-
 
 }

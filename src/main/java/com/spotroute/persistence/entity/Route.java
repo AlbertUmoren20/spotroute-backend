@@ -18,13 +18,13 @@ public class Route {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "origin_id", nullable = false)
-    private Location origin;
+    private String origin;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "destination_id", nullable = false)
-    private Location destination;
+    private String destination;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal pricePerSeat;
@@ -32,10 +32,13 @@ public class Route {
     @Column(nullable = false)
     private String description;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "route_pickup_points", joinColumns = @JoinColumn(name = "route_id"))
-    @Column(name = "pickup_point")
-    private List<String> pickupPoints;
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL)
+    private List<Stop> stops;
+
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "route_pickup_points", joinColumns = @JoinColumn(name = "route_id"))
+//    @Column(name = "pickup_point")
+//    private List<String> pickupPoints;
 
     @OneToMany(mappedBy = "route", fetch = FetchType.LAZY)
     private List<Ride> rides;

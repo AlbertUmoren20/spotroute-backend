@@ -7,6 +7,7 @@
     import com.spotroute.persistence.entity.Position;
     import com.spotroute.persistence.entity.User;
     import com.spotroute.repository.PositionRepository;
+    import com.spotroute.repository.StopRepository;
     import com.spotroute.util.SecurityUtil;
     import jakarta.servlet.ServletContext;
     import jakarta.validation.Valid;
@@ -26,6 +27,9 @@
     @AllArgsConstructor
     @Slf4j
     public class PositionService {
+
+        private static final double DEFAULT_MATCH_RADIUS_METERS = 500.0;
+        private final StopRepository stopRepository;
         private final PositionRepository positionRepository;
         private final GeometryFactory geometryFactory;
 
@@ -40,8 +44,12 @@
                 position.setCoordinates(point);
                 position.setFormattedAddress(request.getFormattedAddress());
                 position.setRole(request.getRole());
+                position.setPlaceId(request.getPlaceId());
                 position.setUser(user);
                 position.setCreatedAt(Instant.now());
+
+            stopRepository.findNearestStop(point, DEFAULT_MATCH_RADIUS_METERS)
+                    .ifPresent(stop -> position.setMatchedStopId(stop.getId()));
 
                 log.info("Postions successfully captured", request.getFormattedAddress(), user);
                 Position savedPosition = positionRepository.save(position);

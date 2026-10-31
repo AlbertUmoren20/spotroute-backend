@@ -18,9 +18,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/bookings/v1")
+@RequestMapping("v1/bookings")
 @RequiredArgsConstructor
 public class BookingController {
 
@@ -31,12 +32,13 @@ public class BookingController {
     @PostMapping
 //    @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<BookingResponse>> createBooking(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable UUID rideId,
             @Valid @RequestBody CreateBookingRequest req) {
         AppUtil.setStartTime();
-        BookingResponse booking = bookingService.createBooking(userDetails.getUsername(), req);
+        BookingResponse booking = bookingService.createBooking(req, rideId);
         AppUtil.stopTimer();
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Booking created", booking));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.ok("Booking created", booking));
     }
 
     @Operation(summary = "Get User booking history", description = "Users are ale to send a post request to view their ride history" , tags = classTag)
@@ -49,8 +51,7 @@ public class BookingController {
     @Operation(summary = "User's booking details", description = "Users booking details" , tags = classTag)
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<BookingResponse>> getBooking(
-            @PathVariable String id,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(ApiResponse.ok(bookingService.getBooking(id, userDetails.getUsername())));
+            @PathVariable String id) {
+        return ResponseEntity.ok(ApiResponse.ok(bookingService.getBooking(id)));
     }
 }

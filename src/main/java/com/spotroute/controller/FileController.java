@@ -23,7 +23,6 @@ import java.util.HashMap;
 public class FileController {
 
     private final FileService fileService;
-
     private final String classTag = "File Controller";
 
     @Operation(summary = "Upload profile picture", description = "Upload profile picture", tags = classTag)
@@ -32,10 +31,9 @@ public class FileController {
         log.info("Uploading logo");
         AppResponse<?> response =  fileService.storeImage(file);
         response.setStatus(HttpStatus.OK.toString());
-        response.setMessage("Logo has successfully been uploaded.");
+        response.setMessage("Profile picture has successfully been uploaded.");
         response.setData(null);
         return response;
     }
 
 }
-

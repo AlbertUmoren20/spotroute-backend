@@ -44,8 +44,18 @@ public class User {
     @Column(nullable = false)
     private String phone;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean phoneVerified;
+
+    @Column(name = "phone_verification_otp")
+    private String phoneVerificationOtp;
+
+    @Column(name = "phone_verification_otp_expiry")
+    private LocalDateTime phoneVerificationOtpExpiry;
+
     private LocalDate dateOfBirth;
 
+    @Column(columnDefinition = "TEXT")
     private String profilePicture;
 
     @Column(nullable = false)

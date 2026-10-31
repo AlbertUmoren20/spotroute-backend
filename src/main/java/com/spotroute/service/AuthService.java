@@ -27,9 +27,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.sql.Driver;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 
@@ -45,6 +48,44 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtProperties jwtProperties;
     private final RefreshTokenRepository refreshTokenRepository;
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
+    private static final int PHONE_OTP_LIFETIME_MINUTES = 10;
+
+    public void requestPhoneVerificationOtp(User user) {
+        if (user == null) {
+            throw new CustomException("Authenticated user not found", HttpStatus.UNAUTHORIZED);
+        }
+        if (user.getPhone() == null || user.getPhone().isBlank()) {
+            throw new CustomException("User does not have a phone number", HttpStatus.BAD_REQUEST);
+        }
+
+        String otp = String.format(Locale.ROOT, "%04d", SECURE_RANDOM.nextInt(1_000_000));
+        user.setPhoneVerificationOtp(otp);
+        user.setPhoneVerificationOtpExpiry(LocalDateTime.now().plusMinutes(PHONE_OTP_LIFETIME_MINUTES));
+        userRepository.save(user);
+
+        // smsNotificationService.sendOtp(user.getPhone(), otp);
+    }
+
+    public void verifyPhoneOtp(User user, String otp) {
+        if (user == null) {
+            throw new CustomException("Authenticated user not found", HttpStatus.UNAUTHORIZED);
+        }
+        LocalDateTime expiry = user.getPhoneVerificationOtpExpiry();
+        if (user.getPhoneVerificationOtp() == null || expiry == null
+                || !expiry.isAfter(LocalDateTime.now())) {
+            throw new CustomException("Phone verification code is missing or expired", HttpStatus.BAD_REQUEST);
+        }
+        if (!user.getPhoneVerificationOtp().equals(otp)) {
+            throw new CustomException("Invalid phone verification code", HttpStatus.BAD_REQUEST);
+        }
+
+        user.setPhoneVerified(true);
+        user.setPhoneVerificationOtp(null);
+        user.setPhoneVerificationOtpExpiry(null);
+        userRepository.save(user);
+    }
 
 
     public AuthResponse register(RegisterRequest req) {
@@ -73,7 +114,7 @@ public class AuthService {
         User user = userRepository.findByEmail(req.getEmail())
                 .orElseThrow(() -> new BadRequestException("Invalid credentials!"));
 
-        if(user == null || !passwordEncoder.matches(req.getPassword(), user.getPassword())){
+        if(!passwordEncoder.matches(req.getPassword(), user.getPassword())){
             log.info("Failed login attempt" + req.getEmail(), user);
             throw new BadRequestException ("Invalid credentials!");
         }
@@ -208,4 +249,3 @@ public class AuthService {
 //
 //        return buildAuthResponse(null, refreshTokenStr, user, driverProfile);
 //    }
-
